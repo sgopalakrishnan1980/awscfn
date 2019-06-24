@@ -1,0 +1,123 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09T00:00:00.000Z",
+	"Description": "Aurora serverless cluster",
+	"Parameters": {
+		"DatabaseName": {
+			"Type": "String"
+		},
+		"EngineVersion": {
+			"Type": "String",
+			"Default": "5.6"
+		},
+		"MasterUsername": {
+			"Type": "String",
+			"Default": "root"
+		},
+		"MasterUserPassword": {
+			"Type": "String",
+			"NoEcho": true
+		},
+		"VpcId": {
+			"Type": "AWS::EC2::VPC::Id"
+		},
+		"VpcSecurityGroupId": {
+			"Type": "AWS::EC2::SecurityGroup::Id"
+		},
+		"BastionImageId": {
+			"Type": "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+			"Default": "/aws/service/ami-amazon-linux-latest/amzn-ami-hvm-x86_64-ebs"
+		},
+		"BastionKeyName": {
+			"Type": "AWS::EC2::KeyPair::KeyName",
+			"Description": "EC2 key used to connect to the bastion host"
+		}
+	},
+	"Resources": {
+		"Cluster": {
+			"Type": "AWS::RDS::DBCluster",
+			"Properties": {
+				"Engine": "aurora",
+				"EngineMode": "serverless",
+				"EngineVersion": null,
+				"DatabaseName": null,
+				"MasterUsername": null,
+				"MasterUserPassword": null,
+				"DBClusterIdentifier": null,
+				"BackupRetentionPeriod": 35,
+				"DeletionProtection": true,
+				"VpcSecurityGroupIds": [
+					null
+				]
+			}
+		},
+		"BastionSecurityGroup": {
+			"Type": "AWS::EC2::SecurityGroup",
+			"Properties": {
+				"GroupDescription": null,
+				"SecurityGroupEgress": [
+					{
+						"CidrIp": "0.0.0.0/0",
+						"FromPort": -1,
+						"ToPort": -1,
+						"IpProtocol": "-1"
+					},
+					{
+						"DestinationSecurityGroupId": null,
+						"IpProtocol": "tcp",
+						"FromPort": 3306,
+						"ToPort": 3306
+					}
+				],
+				"SecurityGroupIngress": [],
+				"VpcId": null
+			}
+		},
+		"Bastion": {
+			"Type": "AWS::EC2::Instance",
+			"Properties": {
+				"DisableApiTermination": true,
+				"ImageId": null,
+				"InstanceType": "t2.nano",
+				"KeyName": null,
+				"Monitoring": false,
+				"SecurityGroupIds": [
+					null,
+					null
+				],
+				"UserData": null
+			}
+		}
+	},
+	"Outputs": {
+		"Host": {
+			"Value": null,
+			"Export": {
+				"Name": null
+			}
+		},
+		"Name": {
+			"Value": null,
+			"Export": {
+				"Name": null
+			}
+		},
+		"BastionHost": {
+			"Value": null,
+			"Export": {
+				"Name": null
+			}
+		},
+		"BastionIp": {
+			"Value": null,
+			"Export": {
+				"Name": null
+			}
+		},
+		"BastionSecurityGroupId": {
+			"Value": null,
+			"Export": {
+				"Name": null
+			}
+		}
+	}
+}
