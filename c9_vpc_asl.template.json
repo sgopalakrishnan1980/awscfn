@@ -207,7 +207,7 @@
 		}
 	},
 	"Conditions": {
-		"EnableBastion": null
+		"EnableBastion": true
 	},
 	"Resources": {
 		"VPCStack": {
@@ -282,21 +282,14 @@
 			}
 		},
 		"Cluster": {
-			"Type" : "AWS::RDS::DBCluster"
+			"Type" : "AWS::RDS::DBCluster",
 			"Properties":{
 				"Engine":"aurora",
 				"EngineMode": "serverless",
-				"Engineversion": null,
-				"DatabaseName": null, 
-				"MasterUsername": null,
-				"MasterUserPassword": null,
-				"DBClusterIdentifier": null,
 				"BackupRetentionPeriod": 35,
-				"DeletionProtection": true,
-				"VPCSecurityGroupIds": [
-					null
-				]
-			}
+				"DeletionProtection": true
+			},
+			"DependsOn": "VPCStack"
 
 		}
 
